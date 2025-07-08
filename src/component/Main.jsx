@@ -1,44 +1,64 @@
 import React from "react";
 import "./TechTide.css";
+import { useState, useEffect } from "react";
 
 function Main() {
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  async function videosLoad() {
+    try {
+      let url = `https://api.freeapi.app/api/v1/public/youtube/videos`;
+      let response = await fetch(url);
+      let data = await response.json();
+      let videos = data.data.data;
+      console.log(videos);
+      setVideos(videos);
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    videosLoad();
+  }, []);
+
+  function playVideo(video) {
+    setSelectedVideo(video);
+  }
+
   return (
     <div className="container">
       <h1>Tech Video Explorer</h1>
-      <div className="search-bar">
-        <input type="text" placeholder="Search for videos..." />
-        <button>Search</button>
-      </div>
-
-      <div className="video-grid">
-        <div className="video-card">
-          <img src="https://via.placeholder.com/300x180" alt="Video 1" />
-          <p>Mountain Waterfall</p>
+      {selectedVideo && (
+        <div>
+          <h1>{selectedVideo.items.snippet.title}</h1>
+          <iframe
+            width="560"
+            height="315"
+            src={`https://www.youtube.com/embed/${selectedVideo.items.id}`}
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+          <p>{selectedVideo.items.snippet.description}</p>
         </div>
-        <div className="video-card">
-          <img src="https://via.placeholder.com/300x180" alt="Video 2" />
-          <p>Ocean Tech Review</p>
-        </div>
-        <div className="video-card">
-          <img src="https://via.placeholder.com/300x180" alt="Video 3" />
-          <p>Gadget Talk</p>
-        </div>
-        <div className="video-card">
-          <img src="https://via.placeholder.com/300x180" alt="Video 4" />
-          <p>Future of AI</p>
-        </div>
-      </div>
-
-      <div className="video-player-overlay">
-        <div className="player-box">
-          <button className="close-btn">✖</button>
-          <video controls>
-            <source src="your-video.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <h2>Mountain Waterfall</h2>
-        </div>
-      </div>
+      )}
+      {videos.map((video, index) => {
+        let snippet = video.items.snippet;
+        return (
+          <div key={index}>
+            <h3>{snippet.title}</h3>
+            <img
+              src={snippet.thumbnails.medium.url}
+              alt=""
+              onClick={() => {
+                playVideo(video);
+              }}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
