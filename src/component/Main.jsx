@@ -1,4 +1,3 @@
-import React from "react";
 import "./TechTide.css";
 import { useState, useEffect } from "react";
 
@@ -43,6 +42,7 @@ function Main() {
           }
         >
           {videos.map((video, index) => {
+            let statistics = video.items.statistics;
             let snippet = video.items.snippet;
             return (
               <div
@@ -60,6 +60,11 @@ function Main() {
                     playVideo(video);
                   }}
                 />
+                <div className="flex gap-2">
+                  <span>Comment:{statistics.commentCount}</span>
+                  <span>Count{statistics.likeCount}</span>
+                  <span>View:{statistics.viewCount}</span>
+                </div>
               </div>
             );
           })}
