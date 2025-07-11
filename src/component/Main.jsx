@@ -1,5 +1,6 @@
 import "./TechTide.css";
 import { useState, useEffect } from "react";
+import { ThumbsUp, Eye, MessageSquareText } from "lucide-react";
 
 function Main() {
   const [videos, setVideos] = useState([]);
@@ -26,9 +27,24 @@ function Main() {
     setSelectedVideo(video);
   }
 
+  function handleInput() {
+    console.log("click on input");
+  }
+
   return (
     <div className="container">
       <h1 className="p-4 ">Tech Video Explorer</h1>
+      <div>
+        <input
+          className="border "
+          type="text"
+          onChange={(e) => {
+            {
+              handleInput(e.target.value);
+            }
+          }}
+        />
+      </div>
       <div
         className={
           selectedVideo ? ` grid grid-cols-2 gap-4` : `grid grid-cols-1`
@@ -53,7 +69,7 @@ function Main() {
                   {snippet.title}
                 </h3>
                 <img
-                  className=" w-full"
+                  className=" w-full cursor-pointer"
                   src={snippet.thumbnails.medium.url}
                   alt=""
                   onClick={() => {
@@ -61,9 +77,18 @@ function Main() {
                   }}
                 />
                 <div className="flex gap-2">
-                  <span>Comment:{statistics.commentCount}</span>
-                  <span>Count{statistics.likeCount}</span>
-                  <span>View:{statistics.viewCount}</span>
+                  <span>
+                    <MessageSquareText color="#0ce45f" />
+                    {statistics.commentCount}
+                  </span>
+                  <span>
+                    <ThumbsUp />
+                    {statistics.likeCount}
+                  </span>
+                  <span>
+                    <Eye color="#f2d750" />
+                    {statistics.viewCount}
+                  </span>
                 </div>
               </div>
             );
