@@ -5,13 +5,29 @@ import { ThumbsUp, Eye, MessageSquareText } from "lucide-react";
 function Main() {
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  async function videosLoad() {
+  async function videosLoad(input, sortByValue, pageLimit) {
     try {
       let url = `https://api.freeapi.app/api/v1/public/youtube/videos`;
+      if (input) {
+        url += `?query=${input}`;
+      }
+      if (sortByValue) {
+        if (input) {
+          url += `&sortBy=${sortByValue}`;
+        } else {
+          url += `?sortBy=${sortByValue}`;
+        }
+      }
+
+      if (pageLimit) {
+        
+      }
+
       let response = await fetch(url);
       let data = await response.json();
-      console.log(data);
 
       let videos = data.data.data;
       console.log(videos);
@@ -27,10 +43,21 @@ function Main() {
     setSelectedVideo(video);
   }
 
-  function handleInput() {
-    console.log("click on input");
+  function handleInput(input) {
+    setSearchInput(input);
   }
 
+  function handleSearchButton() {
+    videosLoad(searchInput);
+  }
+
+  function handleSortBy(e) {
+    videosLoad(searchInput, e.target.value);
+  }
+
+  function handlePageLimit(e) {
+    videosLoad(searchInput, "latest", e.target.value);
+  }
   return (
     <div className="container">
       <h1 className="p-4 ">Tech Video Explorer</h1>
@@ -44,6 +71,14 @@ function Main() {
             }
           }}
         />
+        <button onClick={handleSearchButton}>Search</button>
+
+        <select name="sortby" id="sortby" onChange={handleSortBy}>
+          <option value="mostLiked">Most Liked</option>
+          <option value="mostViewed">Most Viewed</option>
+          <option value="oldest">Oldest</option>
+          <option value="latest">Latest</option>
+        </select>
       </div>
       <div
         className={
@@ -76,16 +111,16 @@ function Main() {
                     playVideo(video);
                   }}
                 />
-                <div className="flex gap-2">
-                  <span>
+                <div className="flex gap-2 justify-between">
+                  <span className="flex p-2 gap-1 ">
                     <MessageSquareText color="#0ce45f" />
                     {statistics.commentCount}
                   </span>
-                  <span>
+                  <span className="flex p-2 gap-1 ">
                     <ThumbsUp />
                     {statistics.likeCount}
                   </span>
-                  <span>
+                  <span className="flex p-2 gap-1 ">
                     <Eye color="#f2d750" />
                     {statistics.viewCount}
                   </span>
@@ -113,6 +148,23 @@ function Main() {
               </p>
             </div>
           )}
+        </div>
+      </div>
+      <div className="flex x gap-2 p-4">
+        <div className="flex gap-2">
+          <p className="p-3">Items per page</p>
+          <select name="pageLimit" id="pageLimit" onChange={handlePageLimit}>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+
+        <div className="flex gap-4">
+          <button>Previous</button>
+          <p className="p-3">page number</p>
+          <button>Next</button>
         </div>
       </div>
     </div>
