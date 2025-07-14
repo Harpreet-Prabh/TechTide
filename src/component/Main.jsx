@@ -7,8 +7,10 @@ function Main() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState("mostLiked");
+  const [pageLimit, setPageLimit] = useState();
 
-  async function videosLoad(input, sortByValue, pageLimit) {
+  async function videosLoad(input, sortByValue, pageLimit, currentPage) {
     try {
       let url = `https://api.freeapi.app/api/v1/public/youtube/videos`;
       if (input) {
@@ -23,7 +25,19 @@ function Main() {
       }
 
       if (pageLimit) {
-        
+        if (input || sortByValue) {
+          url += `&limit=${pageLimit}`;
+        } else {
+          url += `?limit=${pageLimit}`;
+        }
+      }
+
+      if (currentPage) {
+        if (input || sortByValue || pageLimit) {
+          url += `&page=${currentPage}`;
+        } else {
+          url += `?page=${currentPage}`;
+        }
       }
 
       let response = await fetch(url);
@@ -52,12 +66,31 @@ function Main() {
   }
 
   function handleSortBy(e) {
-    videosLoad(searchInput, e.target.value);
+    setSortBy(e.target.value);
+    videosLoad(searchInput, sortBy);
   }
 
   function handlePageLimit(e) {
-    videosLoad(searchInput, "latest", e.target.value);
+    setPageLimit(e.target.value);
+    videosLoad(searchInput, sortBy, pageLimit);
   }
+
+  function handlePreviousButton() {
+    if (currentPage == 1) {
+      return false;
+    }
+   setCurrentPage(currentPage - 1);
+    console.log(currentPage, "this is the previous page");
+  }
+
+  function handleNextButton() {
+    setCurrentPage(currentPage + 1);
+    console.log(currentPage, "this is next page click");
+  }
+
+  useEffect(() => {
+    videosLoad(searchInput, sortBy, pageLimit, currentPage);
+  }, [currentPage]);
   return (
     <div className="container">
       <h1 className="p-4 ">Tech Video Explorer</h1>
@@ -162,9 +195,9 @@ function Main() {
         </div>
 
         <div className="flex gap-4">
-          <button>Previous</button>
-          <p className="p-3">page number</p>
-          <button>Next</button>
+          <button onClick={handlePreviousButton}>Previous</button>
+          <p className="p-3">{currentPage}</p>
+          <button onClick={handleNextButton}>Next</button>
         </div>
       </div>
     </div>
