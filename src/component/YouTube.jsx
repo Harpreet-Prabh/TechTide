@@ -1,7 +1,7 @@
 import { ThumbsUp, Eye, MessageSquareText } from "lucide-react";
 import useYouTubeVideos from "../hook/useyoutubevideos";
 
-function Main() {
+function YouTube() {
   const {
     playVideo,
     handleInput,
@@ -150,4 +150,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default YouTube;

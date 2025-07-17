@@ -1,13 +1,13 @@
 import { useState } from "react";
 import "./App.css";
-import Main from "./component/main";
+import YouTube from "./component/YouTube";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
-      <Main></Main>
+      <YouTube></YouTube>
     </>
   );
 }
