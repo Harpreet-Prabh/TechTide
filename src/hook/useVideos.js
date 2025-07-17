@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-export default function useYouTubeVideos() {
+export default function useVideos() {
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [searchInput, setSearchInput] = useState("");

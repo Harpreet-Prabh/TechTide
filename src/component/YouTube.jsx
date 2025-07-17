@@ -1,5 +1,5 @@
 import { ThumbsUp, Eye, MessageSquareText } from "lucide-react";
-import useYouTubeVideos from "../hook/useyoutubevideos";
+import useVideos from "../hook/useVideos";
 
 function YouTube() {
   const {
@@ -14,7 +14,8 @@ function YouTube() {
     selectedVideo,
     currentPage,
     nextPage,
-  } = useYouTubeVideos();
+  } = useVideos();
+
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 py-4">
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">
